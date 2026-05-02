@@ -16,12 +16,12 @@ SOURCES = {
   "the_atlantic": {
     "base_url": "https://www.theatlantic.com",
     "sections": ["/world/", "/politics/"],
-    "link_selector": "a[href*='/archive/']"
+    "link_selector": "h3 a, a.title, article a, h2 a, h3 a"
   },
   "unione_sarda": {
     "base_url": "https://www.unionesarda.it",
     "sections": ["/news-sardegna/"],
-    "link_selector": "article a, h2 a, h3 a"
+    "link_selector": "a.title, .title a, article a, h2 a, h3 a"
   }
 }
 
