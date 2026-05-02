@@ -133,6 +133,16 @@ def render_article() -> None:
         return
 
     with article_placeholder.container():
+        # Retro console header showing archive count
+        archive_entries = _load_archive()
+        archive_len = len(archive_entries) if isinstance(archive_entries, list) else 0
+        st.markdown(f"""
+        <div class='retro-console' style='max-width:680px; margin:12px auto;'>
+          <div class='title'>ARCHIVE LOG</div>
+          <div class='line'>ARCHIVE ENTRIES: {archive_len}</div>
+          <div class='line'>STATUS: SYSTEM READY</div>
+        </div>
+        """, unsafe_allow_html=True)
         for index, entry in enumerate(archive_data):
             st.markdown(
                 f"<div class='archive-date'>{entry.get('timestamp', '')}</div>",
