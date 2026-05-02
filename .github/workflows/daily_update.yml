@@ -33,8 +33,9 @@ jobs:
 
       - name: Run scraper and generator
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4o-mini' }}
+          AI_PROVIDER: opencode
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_BASE_URL: ${{ secrets.OPENCODE_BASE_URL }}
         run: python cron_scraper.py
 
       - name: Commit and push generated content
