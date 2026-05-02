@@ -9,16 +9,15 @@ from pathlib import Path
 
 import requests
 from dotenv import load_dotenv
-from openai import OpenAI
+load_dotenv()
 
 from scraper import scrape_all_sources
-
-
-load_dotenv()
+from ai_provider import generate_text
 
 BASE_DIR = Path(__file__).resolve().parent
 ARCHIVE_FILE = BASE_DIR / "archivio.json"
 ASSETS_DIR = BASE_DIR / "assets"
+# OPENAI_MODEL kept for backward compatibility; not used in this patch
 OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
 
 PERSONAS = [
@@ -109,21 +108,19 @@ NARRATIVE AND STYLE RULES:
 
 
 def generate_article(local_texts: list[str], international_texts: list[str]) -> str:
-    if not os.environ.get("OPENAI_API_KEY"):
-        raise RuntimeError("OPENAI_API_KEY is required to generate the article.")
+    provider = os.environ.get("AI_PROVIDER", "opencode")
+    api_key = os.environ.get("OPENCODE_API_KEY")
+    base_url = os.environ.get("OPENCODE_BASE_URL")
 
-    client = OpenAI()
-    response = client.chat.completions.create(
-        model=OPENAI_MODEL,
-        response_format={"type": "json_object"},
-        messages=[
-            {"role": "system", "content": "Return only valid JSON."},
-            {"role": "user", "content": build_prompt(local_texts, international_texts)},
-        ],
-        temperature=0.9,
-    )
+    # If Opencode is chosen but credentials are missing, fallback to Google Gemini
+    if provider == "opencode" and (not api_key or not base_url):
+        print("[WARN] Opencode selected but OPENCODE_API_KEY or OPENCODE_BASE_URL not set. Falling back to Google Gemini.")
+        provider = "google"
+        api_key = None
+        base_url = None
 
-    return response.choices[0].message.content or "{}"
+    prompt = build_prompt(local_texts, international_texts)
+    return generate_text(prompt, provider=provider, api_key=api_key, base_url=base_url)
 
 
 def parse_generation(raw_response: str) -> tuple[str, str]:
