@@ -231,8 +231,9 @@ async def main() -> None:
             print("Validation failed. Not enough articles in the pools. Retrying...")
             timeout += 15000
 
-        local_pool = local_pool[:2]
-        international_pool = international_pool[:2]
+    local_pool = local_pool[:2]
+    international_pool = international_pool[:2]
+    print(f"[DEBUG] Final pools -> Local: {len(local_pool)} items, International: {len(international_pool)} items")
 
         if len(local_pool) < 2 or len(international_pool) < 2:
             print("WARNING: Could not gather the target number of articles despite retries.")
