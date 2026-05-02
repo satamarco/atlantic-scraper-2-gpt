@@ -234,6 +234,8 @@ async def main() -> None:
     local_pool = local_pool[:2]
     international_pool = international_pool[:2]
     print(f"[DEBUG] Final pools -> Local: {len(local_pool)} items, International: {len(international_pool)} items")
+    if len(local_pool) == 0 and len(international_pool) == 0:
+        raise RuntimeError("No articles collected from sources; aborting to avoid empty article.")
 
         if len(local_pool) < 2 or len(international_pool) < 2:
             print("WARNING: Could not gather the target number of articles despite retries.")

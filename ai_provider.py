@@ -2,22 +2,27 @@ import json
 import os
 from typing import Optional
 import requests
+import openai
 
-import google.generativeai as genai
 
-
-def _generate_text_google(prompt: str, api_key: Optional[str] = None) -> str:
-    # Configure Gemini via Google Generative AI
-    if api_key:
-        genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-2.5-flash")
-    response = model.generate_content(
-        prompt,
-        generation_config=genai.GenerationConfig(
-            response_mime_type="text/plain"
-        ),
-    )
-    return getattr(response, "text", "")
+def _generate_text_opencode_openai(prompt: str, api_key: str, base_url: str) -> str:
+    # Use OpenAI client configured for Opencode Zen (GPT-5 Nano)
+    if base_url:
+        openai.api_base = base_url.rstrip("/")
+    openai.api_key = api_key
+    try:
+        resp = openai.ChatCompletion.create(
+            model="gpt-5-nano",
+            messages=[
+                {"role": "system", "content": "You are a GPT-5 Nano OpenCode Zen model."},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.9,
+        )
+        return resp.choices[0].message.get("content", "")
+    except Exception as e:
+        print(f"[Opencode] OpenAI call failed: {e}")
+        raise
 
 
 def _generate_text_opencode(prompt: str, api_key: str, base_url: str) -> str:
@@ -58,7 +63,7 @@ def generate_text(prompt: str, provider: str = "google", api_key: Optional[str] 
     if provider == "opencode":
         if api_key and base_url:
             if _healthcheck_opencode(base_url, api_key):
-                return _generate_text_opencode(prompt, api_key, base_url)
+                return _generate_text_opencode_openai(prompt, api_key, base_url)
             else:
                 print("[Opencode] healthcheck failed; returning fallback")
                 return json.dumps({
@@ -70,5 +75,5 @@ def generate_text(prompt: str, provider: str = "google", api_key: Optional[str] 
             "testo_articolo": "Opencode not configured or endpoint unreachable. This is a fallback article to preserve workflow.",
             "soggetto_immagine": "fallback-neon-console"
         })
-    # default to Google Gemini
-    return _generate_text_google(prompt, api_key)
+    # default to OpenAI (or a safe fallback if not configured)
+    return json.dumps({"testo_articolo": "OpenAI fallback due to no provider configured.", "soggetto_immagine": "fallback-neon-console"})
