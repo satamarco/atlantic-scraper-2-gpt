@@ -96,15 +96,6 @@ st.markdown(
 )
 
 st.markdown("<div class='main-title'>Atlantic Scraper 2 GPT</div>", unsafe_allow_html=True)
-archive_data = _load_archive()
-archive_len = len(archive_data) if isinstance(archive_data, list) else 0
-st.markdown(f"""
-<div class='retro-console' style='max-width:680px; margin:12px auto;'>
-  <div class='title'>ARCHIVE LOG</div>
-  <div class='line'>ARCHIVE ENTRIES: {archive_len}</div>
-  <div class='line'>STATUS: SYSTEM READY</div>
-</div>
-""", unsafe_allow_html=True)
 st.markdown("<hr>", unsafe_allow_html=True)
 countdown_placeholder = st.empty()
 st.markdown("<hr>", unsafe_allow_html=True)
@@ -133,16 +124,7 @@ def render_article() -> None:
         return
 
     with article_placeholder.container():
-        # Retro console header showing archive count
-        archive_entries = _load_archive()
-        archive_len = len(archive_entries) if isinstance(archive_entries, list) else 0
-        st.markdown(f"""
-        <div class='retro-console' style='max-width:680px; margin:12px auto;'>
-          <div class='title'>ARCHIVE LOG</div>
-          <div class='line'>ARCHIVE ENTRIES: {archive_len}</div>
-          <div class='line'>STATUS: SYSTEM READY</div>
-        </div>
-        """, unsafe_allow_html=True)
+        # Retro console header removed to avoid import-time side effects
         for index, entry in enumerate(archive_data):
             st.markdown(
                 f"<div class='archive-date'>{entry.get('timestamp', '')}</div>",
