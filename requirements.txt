@@ -1,0 +1,6 @@
+beautifulsoup4
+openai>=1.0.0
+playwright
+python-dotenv
+requests
+streamlit

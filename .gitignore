@@ -1,0 +1,12 @@
+.env
+.streamlit/secrets.toml
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+playwright-report/
+test-results/
