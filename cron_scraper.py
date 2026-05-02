@@ -6,6 +6,7 @@ import re
 import urllib.parse
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Optional
 
 import requests
 from dotenv import load_dotenv
@@ -36,7 +37,7 @@ PERSONAS = [
 ]
 
 
-def save_to_archive(article_text: str, image_path: str | None) -> None:
+def save_to_archive(article_text: str, image_path: Optional[str]) -> None:
     data = []
     if ARCHIVE_FILE.exists():
         try:
@@ -166,7 +167,7 @@ def parse_generation(raw_response: str) -> tuple[str, str]:
     return article_content, image_subject
 
 
-def download_image(image_subject: str) -> str | None:
+def download_image(image_subject: str) -> Optional[str]:
     full_prompt = (
         f"{image_subject}, dark cinematic photography, surreal investigative journalism, "
         "high contrast black and white, subtle glitch art, mysterious"
@@ -243,14 +244,24 @@ async def main() -> None:
         print("WARNING: Could not gather the target number of articles despite retries.")
 
     print(f"Final Validation: Local ({len(local_pool)}), International ({len(international_pool)})")
-    print("Generating article and image prompt...")
+    print("Generating article (image generation disabled)...")
     article_content, image_subject = parse_generation(generate_article(local_pool, international_pool))
 
-    image_path = download_image(image_subject)
-    print("Saving to archive...")
+    image_path = None
+    print("Saving to archive... (no image)")
     save_to_archive(article_content, image_path)
     print("Done.")
 
 
+def test_mode_run() -> None:
+    # Lightweight test run: write a sample article to archive without scraping
+    sample_text = "TEST ARTICLE: integration check. This is a synthetic article used for local verification."
+    save_to_archive(sample_text, None)
+    print("Test mode: archive updated with sample article.")
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    if os.environ.get("SKIP_SCRAPING_TEST", "0") == "1":
+        test_mode_run()
+    else:
+        asyncio.run(main())
