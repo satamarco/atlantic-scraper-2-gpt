@@ -33,7 +33,7 @@ def _generate_text_opencode(prompt: str, api_key: str, base_url: str) -> str:
         # Return a more informative fallback JSON payload to keep CI/CI-safe output
         print(f"[Opencode] request failed: {e}")
         return json.dumps({
-            "testo_articolo": "Fallback article due to Opencode endpoint unavailability. This placeholder preserves the workflow.",
+            "testo_articolo": "Fallback article due to Opencode endpoint unavailability. Questo è un testo di fallback per mantenere il flusso. This placeholder preserves the workflow.",
             "soggetto_immagine": "fallback-neon-console"
         })
 
