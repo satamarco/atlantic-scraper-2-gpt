@@ -198,7 +198,8 @@ def download_image(image_subject: str) -> Optional[str]:
 
 
 async def main() -> None:
-    print("Scraping multi-source started...")
+    try:
+        print("Scraping multi-source started...")
 
     max_retries = 3
     timeout = 30000
@@ -254,8 +255,15 @@ def test_mode_run() -> None:
     print("Test mode: archive updated with sample article.")
 
 
-if __name__ == "__main__":
-    if os.environ.get("SKIP_SCRAPING_TEST", "0") == "1":
-        test_mode_run()
-    else:
+    if __name__ == "__main__":
+        if os.environ.get("SKIP_SCRAPING_TEST", "0") == "1":
+            test_mode_run()
+        else:
         asyncio.run(main())
+    except Exception as e:
+        print(f"[ERR] Unhandled error in main: {e}")
+        try:
+            save_to_archive(f"Fallback article due to error: {e}", None)
+        except Exception:
+            pass
+        print("Saved fallback article due to error.")
