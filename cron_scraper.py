@@ -237,17 +237,17 @@ async def main() -> None:
     if len(local_pool) == 0 and len(international_pool) == 0:
         raise RuntimeError("No articles collected from sources; aborting to avoid empty article.")
 
-        if len(local_pool) < 2 or len(international_pool) < 2:
-            print("WARNING: Could not gather the target number of articles despite retries.")
+    if len(local_pool) < 2 or len(international_pool) < 2:
+        print("WARNING: Could not gather the target number of articles despite retries.")
 
-        print(f"Final Validation: Local ({len(local_pool)}), International ({len(international_pool)})")
-        print("Generating article (image generation disabled)...")
-        article_content, image_subject = parse_generation(generate_article(local_pool, international_pool))
+    print(f"Final Validation: Local ({len(local_pool)}), International ({len(international_pool)})")
+    print("Generating article (image generation disabled)...")
+    article_content, image_subject = parse_generation(generate_article(local_pool, international_pool))
 
-        image_path = None
-        print("Saving to archive... (no image)")
-        save_to_archive(article_content, image_path)
-        print("Done.")
+    image_path = None
+    print("Saving to archive... (no image)")
+    save_to_archive(article_content, image_path)
+    print("Done.")
     except Exception as e:
         print(f"[ERR] Error in main: {e}")
         # Fallback to a safe entry so CI doesn't fail
