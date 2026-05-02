@@ -1,5 +1,11 @@
 [
     {
+        "timestamp": "2026-05-02 04:38:52 UTC",
+        "content": "Fallback article due to Opencode endpoint unavailability. Questo è un testo di fallback per mantenere il flusso. This placeholder preserves the workflow.",
+        "type": "Visionary Chronicle",
+        "image_path": null
+    },
+    {
         "timestamp": "2026-05-02 04:34:14 UTC",
         "content": "Fallback article due to Opencode endpoint unavailability. Questo è un testo di fallback per mantenere il flusso. This placeholder preserves the workflow.",
         "type": "Visionary Chronicle",
