@@ -61,6 +61,8 @@ def _healthcheck_opencode(base_url: str, api_key: str) -> bool:
 def generate_text(prompt: str, provider: str = "google", api_key: Optional[str] = None, base_url: Optional[str] = None) -> str:
     provider = (provider or "google").lower()
     if provider == "opencode":
+        print("[Opencode] provider selected for generation (Zen GPT-5 Nano)")
+    if provider == "opencode":
         if api_key and base_url:
             if _healthcheck_opencode(base_url, api_key):
                 return _generate_text_opencode_openai(prompt, api_key, base_url)
