@@ -96,6 +96,15 @@ st.markdown(
 )
 
 st.markdown("<div class='main-title'>Atlantic Scraper 2 GPT</div>", unsafe_allow_html=True)
+archive_data = _load_archive()
+archive_len = len(archive_data) if isinstance(archive_data, list) else 0
+st.markdown(f"""
+<div class='retro-console' style='max-width:680px; margin:12px auto;'>
+  <div class='title'>ARCHIVE LOG</div>
+  <div class='line'>ARCHIVE ENTRIES: {archive_len}</div>
+  <div class='line'>STATUS: SYSTEM READY</div>
+</div>
+""", unsafe_allow_html=True)
 st.markdown("<hr>", unsafe_allow_html=True)
 countdown_placeholder = st.empty()
 st.markdown("<hr>", unsafe_allow_html=True)
