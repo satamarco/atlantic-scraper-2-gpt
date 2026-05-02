@@ -1,6 +1,7 @@
 import asyncio
 import json
 import random
+from typing import List, Optional, Set
 from datetime import datetime
 from pathlib import Path
 
@@ -45,7 +46,7 @@ SOURCES = {
 }
 
 
-def load_used_links() -> set[str]:
+def load_used_links() -> Set[str]:
     if not USED_LINKS_FILE.exists():
         return set()
 
@@ -63,7 +64,7 @@ def save_used_links(links: set[str]) -> None:
         json.dump(sorted(links), file, indent=4)
 
 
-async def fetch_article_data(page: Page, url: str, timeout: int = 30000) -> str | None:
+async def fetch_article_data(page: Page, url: str, timeout: int = 30000) -> Optional[str]:
     try:
         await page.goto(url, timeout=timeout)
         await page.wait_for_load_state("domcontentloaded")
@@ -103,7 +104,7 @@ async def fetch_article_data(page: Page, url: str, timeout: int = 30000) -> str 
         return None
 
 
-async def scrape_all_sources(timeout: int = 30000) -> dict[str, list[str]]:
+async def scrape_all_sources(timeout: int = 30000) -> dict[str, List[str]]:
     used_links = load_used_links()
     new_used_links = set(used_links)
     sources_data: dict[str, list[str]] = {source_name: [] for source_name in SOURCES}
@@ -121,8 +122,8 @@ async def scrape_all_sources(timeout: int = 30000) -> dict[str, list[str]]:
 
         for source_name, source_info in SOURCES.items():
             print(f"\n=== Exploring {source_name.upper()} ===")
-            valid_articles: list[str] = []
-            collected_links: set[str] = set()
+            valid_articles: List[str] = []
+            collected_links: Set[str] = set()
 
             sections = list(source_info["sections"])
             random.shuffle(sections)
