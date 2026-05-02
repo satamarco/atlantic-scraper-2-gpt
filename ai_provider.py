@@ -30,10 +30,11 @@ def _generate_text_opencode(prompt: str, api_key: str, base_url: str) -> str:
         data = resp.json()
         return data.get("text", data.get("response", ""))
     except requests.RequestException as e:
-        # Return a safe JSON payload to keep CI/CI-safe output
+        # Return a more informative fallback JSON payload to keep CI/CI-safe output
+        print(f"[Opencode] request failed: {e}")
         return json.dumps({
-            "testo_articolo": "Opencode endpoint unavailable. Unable to generate content.",
-            "soggetto_immagine": "opencode-unavailable"
+            "testo_articolo": "Fallback article due to Opencode endpoint unavailability. This placeholder preserves the workflow.",
+            "soggetto_immagine": "fallback-neon-console"
         })
 
 
@@ -42,10 +43,10 @@ def generate_text(prompt: str, provider: str = "google", api_key: Optional[str] 
     if provider == "opencode":
         if api_key and base_url:
             return _generate_text_opencode(prompt, api_key, base_url)
-        # If Opencode is requested but not configured, return a safe JSON payload
+        # If Opencode is requested but not configured, provide a richer fallback JSON
         return json.dumps({
-            "testo_articolo": "Opencode not configured or endpoint unreachable.",
-            "soggetto_immagine": "opencode-unavailable"
+            "testo_articolo": "Opencode not configured or endpoint unreachable. This is a fallback article to preserve workflow.",
+            "soggetto_immagine": "fallback-neon-console"
         })
     # default to Google Gemini
     return _generate_text_google(prompt, api_key)
