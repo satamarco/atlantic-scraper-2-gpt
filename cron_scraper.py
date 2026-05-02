@@ -262,11 +262,12 @@ if __name__ == "__main__":
     if os.environ.get("SKIP_SCRAPING_TEST", "0") == "1":
         test_mode_run()
     else:
-        asyncio.run(main())
-    except Exception as e:
-        print(f"[ERR] Unhandled error in main: {e}")
         try:
-            save_to_archive(f"Fallback article due to error: {e}", None)
-        except Exception:
-            pass
-        print("Saved fallback article due to error.")
+            asyncio.run(main())
+        except Exception as e:
+            print(f"[ERR] Unhandled error in main: {e}")
+            try:
+                save_to_archive(f"Fallback article due to error: {e}", None)
+            except Exception:
+                pass
+            print("Saved fallback article due to error.")
