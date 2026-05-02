@@ -209,15 +209,9 @@ async def main() -> None:
         print(f"--- Scraping Attempt {attempt + 1} (Timeout: {timeout}ms) ---")
         sources_data = await scrape_all_sources(timeout=timeout)
 
-        current_local = []
-        current_local.extend(sources_data.get("unione_sarda", []))
-        current_local.extend(sources_data.get("sardinia_post", []))
-        current_local.extend(sources_data.get("cronache_nuoresi", []))
+        current_local = sources_data.get("unione_sarda", [])
 
-        current_international = []
-        current_international.extend(sources_data.get("the_atlantic", []))
-        current_international.extend(sources_data.get("nbc_news", []))
-        current_international.extend(sources_data.get("vice", []))
+        current_international = sources_data.get("the_atlantic", [])
 
         local_pool.extend(current_local)
         international_pool.extend(current_international)
@@ -227,20 +221,20 @@ async def main() -> None:
 
         print(
             "Current Pool Status -> "
-            f"Local: {len(local_pool)}/8 | International: {len(international_pool)}/7"
+            f"Local: {len(local_pool)}/2 | International: {len(international_pool)}/2"
         )
 
-        if len(local_pool) >= 8 and len(international_pool) >= 7:
+        if len(local_pool) >= 2 and len(international_pool) >= 2:
             print("Validation passed. Enough articles collected.")
             break
 
         print("Validation failed. Not enough articles in the pools. Retrying...")
         timeout += 15000
 
-    local_pool = local_pool[:8]
-    international_pool = international_pool[:7]
+    local_pool = local_pool[:2]
+    international_pool = international_pool[:2]
 
-    if len(local_pool) < 8 or len(international_pool) < 7:
+    if len(local_pool) < 2 or len(international_pool) < 2:
         print("WARNING: Could not gather the target number of articles despite retries.")
 
     print(f"Final Validation: Local ({len(local_pool)}), International ({len(international_pool)})")

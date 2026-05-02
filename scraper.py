@@ -13,37 +13,19 @@ BASE_DIR = Path(__file__).resolve().parent
 USED_LINKS_FILE = BASE_DIR / "used_links.json"
 
 SOURCES = {
-    "the_atlantic": {
-        "base_url": "https://www.theatlantic.com",
-        "sections": ["/world/", "/politics/", "/science/", "/technology/", "/business/"],
-        "link_selector": "a[href*='/archive/']",
-    },
-    "unione_sarda": {
-        "base_url": "https://www.unionesarda.it",
-        "sections": ["/news-sardegna/", "/tempo-libero/", "/cultura/"],
-        "link_selector": "article a, h2 a, h3 a",
-    },
-    "sardinia_post": {
-        "base_url": "https://www.sardiniapost.it",
-        "sections": ["/category/cucina-e-cibo/", "/category/culture/", "/category/eventi/"],
-        "link_selector": "h3 a, .entry-title a",
-    },
-    "nbc_news": {
-        "base_url": "https://www.nbcnews.com",
-        "sections": ["/world", "/politics", "/tech", "/science", "/business"],
-        "link_selector": "h2 a, .v-f a",
-    },
-    "vice": {
-        "base_url": "https://www.vice.com/en",
-        "sections": ["/section/news", "/section/tech", "/section/world", "/section/politics"],
-        "link_selector": "h3 a, .hdg a",
-    },
-    "cronache_nuoresi": {
-        "base_url": "https://www.cronachenuoresi.it",
-        "sections": ["/category/cultura-e-societa/", "/category/eventi/"],
-        "link_selector": "h2 a, .entry-title a",
-    },
+  "the_atlantic": {
+    "base_url": "https://www.theatlantic.com",
+    "sections": ["/world/", "/politics/"],
+    "link_selector": "a[href*='/archive/']"
+  },
+  "unione_sarda": {
+    "base_url": "https://www.unionesarda.it",
+    "sections": ["/news-sardegna/"],
+    "link_selector": "article a, h2 a, h3 a"
+  }
 }
+
+MAX_ARTICLES_PER_SOURCE = 2
 
 
 def load_used_links() -> Set[str]:
@@ -161,7 +143,7 @@ async def scrape_all_sources(timeout: int = 30000) -> dict[str, List[str]]:
             random.shuffle(shuffled_links)
 
             for url in shuffled_links:
-                if len(valid_articles) >= 3:
+                if len(valid_articles) >= MAX_ARTICLES_PER_SOURCE:
                     break
 
                 print(f"   - Testing article: {url}")
