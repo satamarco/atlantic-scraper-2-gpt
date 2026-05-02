@@ -112,13 +112,6 @@ def generate_article(local_texts: list[str], international_texts: list[str]) -> 
     api_key = os.environ.get("OPENCODE_API_KEY")
     base_url = os.environ.get("OPENCODE_BASE_URL")
 
-    # If Opencode is chosen but credentials are missing, fallback to Google Gemini
-    if provider == "opencode" and (not api_key or not base_url):
-        print("[WARN] Opencode selected but OPENCODE_API_KEY or OPENCODE_BASE_URL not set. Falling back to Google Gemini.")
-        provider = "google"
-        api_key = None
-        base_url = None
-
     prompt = build_prompt(local_texts, international_texts)
     return generate_text(prompt, provider=provider, api_key=api_key, base_url=base_url)
 

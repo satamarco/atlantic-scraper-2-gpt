@@ -32,7 +32,9 @@ def _generate_text_opencode(prompt: str, api_key: str, base_url: str) -> str:
 
 def generate_text(prompt: str, provider: str = "google", api_key: Optional[str] = None, base_url: Optional[str] = None) -> str:
     provider = (provider or "google").lower()
-    if provider == "opencode" and api_key and base_url:
-        return _generate_text_opencode(prompt, api_key, base_url)
-    # Fallback to Google Gemini
+    if provider == "opencode":
+        if api_key and base_url:
+            return _generate_text_opencode(prompt, api_key, base_url)
+        raise RuntimeError("OPENCODE_API_KEY and OPENCODE_BASE_URL must be set to use Opencode as provider.")
+    # default to Google Gemini (no fallback)
     return _generate_text_google(prompt, api_key)
